@@ -1,0 +1,16 @@
+Client:
+    * trace bSelfMute to make similar changes for recording
+        * add new boolean to User bRecording
+        * add rec.svg to user icon list if bRecording = true
+    * perform actual recording
+
+Network:
+    * add message to exchange recording state
+
+Server:
+    * publish recordingstate using ICe
+
+
+most things can be copy/pasted from:
+http://mumble.git.sourceforge.net/git/gitweb.cgi?p=mumble/mumble;a=commitdiff;h=d556ca3ce0f1834568bfe9c8c0defc54e2930184
+http://mumble.git.sourceforge.net/git/gitweb.cgi?p=mumble/mumble;a=commitdiff;h=359d01c39dca03e5b32b02c9e6013e53701aa304
