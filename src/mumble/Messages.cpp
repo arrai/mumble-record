@@ -271,6 +271,22 @@ void MainWindow::msgUserState(const MumbleProto::UserState &msg) {
 		}
 	}
 
+    if (msg.has_recording())
+    {
+        if(pSrc->bRecording != msg.recording())
+        {
+            pSrc->setRecording(msg.recording());
+            if(msg.recording())
+            {
+                g.l->log(Log::Recording, tr("%1 started recording.").arg(Log::formatClientUser(pSrc, Log::Source)));
+            }
+            else
+            {
+                g.l->log(Log::Recording, tr("%1 stopped recording.").arg(Log::formatClientUser(pSrc, Log::Source)));
+            }
+        }
+    }
+
 	if (msg.has_deaf() || msg.has_mute() || msg.has_suppress() || msg.has_priority_speaker()) {
 		if (msg.has_mute())
 			pDst->setMute(msg.mute());

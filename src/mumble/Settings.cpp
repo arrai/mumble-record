@@ -324,6 +324,7 @@ Settings::Settings() {
 	qmMessageSounds[Log::YouMutedOther] = QLatin1String(":/UserMutedYouOrByYou.ogg");
 	qmMessageSounds[Log::YouMuted] = QLatin1String(":/UserMutedYouOrByYou.ogg");
 	qmMessageSounds[Log::YouKicked] = QLatin1String(":/UserKickedYouOrByYou.ogg");
+	qmMessageSounds[Log::Recording] = QLatin1String(":/Recording.ogg");
 
 	qmMessages[Log::DebugInfo] = Settings::LogConsole;
 	qmMessages[Log::Warning] = Settings::LogConsole | Settings::LogBalloon;
@@ -333,6 +334,9 @@ Settings::Settings() {
 	qmMessages[Log::UserKicked] = Settings::LogConsole;
 	qmMessages[Log::OtherSelfMute] = Settings::LogConsole;
 	qmMessages[Log::OtherMutedOther] = Settings::LogConsole;
+
+    // Unnoticed recording has a chance to violate privacy. Make it as obvious as possible.
+	qmMessages[Log::Recording] = Settings::LogConsole | Settings::LogSoundfile | Settings::LogBalloon | Settings::LogTTS;
 }
 
 bool Settings::doEcho() const {
