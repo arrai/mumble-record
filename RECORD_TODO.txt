@@ -1,12 +1,10 @@
 Client:
     * perform actual recording
-    * encode records using OGG VORBIS
-        * add ogg vorbis library (http://xiph.org/vorbis/)
+    * encode records using OGG VORBIS. Use libsndfile for encoding.
     * send changed userstate
 
 Server:
-    * publish recordingstate using ICe
-
+    * publish recordingstate using ICE
 
 most things can be copy/pasted from:
 http://mumble.git.sourceforge.net/git/gitweb.cgi?p=mumble/mumble;a=commitdiff;h=d556ca3ce0f1834568bfe9c8c0defc54e2930184
