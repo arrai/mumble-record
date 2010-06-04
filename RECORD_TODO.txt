@@ -1,11 +1,8 @@
 Client:
-    * trace bSelfMute to make similar changes for recording
-        * add new boolean to User bRecording
-        * add rec.svg to user icon list if bRecording = true
     * perform actual recording
-
-Network:
-    * add message to exchange recording state
+    * encode records using OGG VORBIS
+        * add ogg vorbis library (http://xiph.org/vorbis/)
+    * send changed userstate
 
 Server:
     * publish recordingstate using ICe
