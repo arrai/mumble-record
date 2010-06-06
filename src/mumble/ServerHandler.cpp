@@ -42,6 +42,7 @@
 #include "NetworkConfig.h"
 #include "OSInfo.h"
 #include "SSL.h"
+#include "VoiceRecorder.h"
 
 ServerHandlerMessageEvent::ServerHandlerMessageEvent(const QByteArray &msg, unsigned int mtype, bool flush) : QEvent(static_cast<QEvent::Type>(SERVERSEND_EVENT)) {
 	qbaMsg = msg;
@@ -85,6 +86,10 @@ ServerHandler::ServerHandler() {
 	cConnection.reset();
 	qusUdp = NULL;
 	bStrong = false;
+	// test code
+	recorder = boost::shared_ptr<VoiceRecorder>(new VoiceRecorder(this));
+	recorder->setSampleRate(48000);
+	recorder->start();
 
 	// For some strange reason, on Win32, we have to call supportsSsl before the cipher list is ready.
 	qWarning("OpenSSL Support: %d (%s)", QSslSocket::supportsSsl(), SSLeay_version(SSLEAY_VERSION));
