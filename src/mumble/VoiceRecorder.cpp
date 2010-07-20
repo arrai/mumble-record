@@ -158,7 +158,7 @@ void VoiceRecorder::setSampleRate(int sampleRate) {
 
 void VoiceRecorder::setFileName(QString fn) {
 	Q_ASSERT(!bRecording);
-	Q_ASSERT(fn.indexOf("%1")!=-1);
+	Q_ASSERT(fn.indexOf(QLatin1String("%1"))!=-1);
 
 	qsFileName = fn;
 }
