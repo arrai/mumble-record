@@ -512,8 +512,15 @@ bool AudioOutputSpeech::needSamples(unsigned int snum) {
 		if (! bLastAlive) {
 			memset(pOut, 0, iFrameSize * sizeof(float));
 		} else {
-			if (p == &LoopUser::lpLoopy)
+			if (p == &LoopUser::lpLoopy) {
 				LoopUser::lpLoopy.fetchFrames();
+			} else {
+				// LoopUser is not not a typo
+				LoopUser *ru = qobject_cast<RecordUser *>(p);
+				if (ru) {
+					ru->fetchFrames();
+				}
+			}
 
 			int avail = 0;
 			int ts = jitter_buffer_get_pointer_timestamp(jbJitter);
@@ -1090,9 +1097,8 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 
 			if (recorder) {
 				AudioOutputSpeech *aos = qobject_cast<AudioOutputSpeech *>(aop);
-				RecordUser *ru = qobject_cast<RecordUser *>(aop);
 
-				if (ru || aos) {
+				if (aos) {
 					for (unsigned int i = 0; i < nsamp; ++i) {
 						recbuff[i] = pfBuffer[i] * volumeAdjustment;
 					}
@@ -1100,13 +1106,16 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 					if (!recorder->getMixDown()) {
 						if (aos) {
 							recorder->addBuffer(aos->p, recbuff, nsamp);
-						} else if (ru) {
-							recorder->addBuffer(ru, recbuff, nsamp);
 						} else {
 							// this should be unreachable
 							Q_ASSERT(false);
 						}
 						recbuff = boost::shared_array<float>(new float[nsamp]);
+					}
+
+					// Don't add the local audio to the real output
+					if (qobject_cast<RecordUser *>(aos->p)) {
+						continue;
 					}
 				}
 			}
