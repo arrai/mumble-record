@@ -1087,14 +1087,22 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 
 			if (recorder) {
 				AudioOutputSpeech *aos = qobject_cast<AudioOutputSpeech *>(aop);
+				RecordUser *ru = qobject_cast<RecordUser *>(aop);
 
-				if (aos) {
+				if (ru || aos) {
 					for (unsigned int i = 0; i < nsamp; ++i) {
 						recbuff[i] = pfBuffer[i] * volumeAdjustment;
 					}
 
 					if (!recorder->getMixDown()) {
-						recorder->addBuffer(aos->p, recbuff, nsamp);
+						if (aos) {
+							recorder->addBuffer(aos->p, recbuff, nsamp);
+						} else if (ru) {
+							recorder->addBuffer(ru, recbuff, nsamp);
+						} else {
+							// this should be unreachable
+							Q_ASSERT(false);
+						}
 						recbuff = boost::shared_array<float>(new float[nsamp]);
 					}
 				}

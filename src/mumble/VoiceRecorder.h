@@ -33,6 +33,7 @@
 #define _VOICERECORDER_H
 
 class ClientUser;
+class RecordUser;
 
 class VoiceRecorder : public QThread {
 private:
@@ -70,6 +71,7 @@ private:
 public:
 	VoiceRecorder(QObject *p);
 	~VoiceRecorder();
+	RecordUser *recordUser;
 
 	void run();
 	void stop();
