@@ -91,7 +91,7 @@ void VoiceRecorder::run() {
 
 			RecordInfo *ri = qhRecordInfo.value(index);
 			if (!ri->sf) {
-				QString fileName = QString::fromLatin1("test_%1.au").arg(index);
+                                QString fileName = sFileName.arg(index);
 				ri->sf = sf_open(qPrintable(fileName), SFM_WRITE, &sfinfo);
 				//sf_command(ri->sf, SFC_SET_UPDATE_HEADER_AUTO, NULL, SF_TRUE);
 				if (rb->cuUser)
@@ -150,6 +150,13 @@ void VoiceRecorder::setSampleRate(int sampleRate) {
 	Q_ASSERT(!bRecording);
 
 	iSampleRate = sampleRate;
+}
+
+void VoiceRecorder::setFileName(QString fn) {
+        Q_ASSERT(!bRecording);
+        Q_ASSERT(fn.indexOf("%1")!=-1);
+
+        sFileName = fn;
 }
 
 void VoiceRecorder::setMixDown(bool mixDown) {

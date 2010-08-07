@@ -62,6 +62,7 @@ private:
 
 	int iSampleRate;
 	bool bRecording;
+        QString sFileName;
 	bool bMixDown;
 	quint64 uiRecordedSamples;
 	void clearLists();
@@ -75,6 +76,7 @@ public:
 	void addBuffer(ClientUser *cu, boost::shared_array<float> buffer, int samples);
 	void addSilence(int samples);
 	void setSampleRate(int sampleRate);
+        void setFileName(QString fn);
 	void setMixDown(bool mixDown);
 	bool getMixDown();
 };
