@@ -978,7 +978,7 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 	const unsigned int nchan = iChannels;
 	boost::shared_ptr<VoiceRecorder> recorder;
 	if (g.sh) {
-		recorder = boost::shared_ptr<VoiceRecorder>(g.sh->recorder);
+		recorder = g.sh->recorder;
 	}
 
 	qrwlOutputs.lockForRead();
