@@ -1167,3 +1167,7 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 bool AudioOutput::isAlive() const {
 	return isRunning();
 }
+
+unsigned int AudioOutput::getMixerFreq() const {
+	return iMixerFreq;
+}
