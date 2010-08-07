@@ -886,7 +886,7 @@ void AudioInput::flushCheck(const QByteArray &frame, bool terminator) {
 		pds << g.p->fPosition[2];
 	}
 
-	if (g.sh->recorder) {
+	if (g.sh && g.sh->recorder) {
 		g.sh->recorder->recordUser->addFrame(QByteArray(data, pds.size() + 1));
 	}
 
