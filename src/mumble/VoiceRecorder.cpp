@@ -65,6 +65,8 @@ void VoiceRecorder::run() {
 	if (iSampleRate == 0)
 		return;
 
+	qWarning() << "VoiceRecorder: recording started to" << qsFileName << "@" << iSampleRate << "hz";
+
 	//	SF_INFO sfinfo = {0, sampleRate, 1, SF_FORMAT_FLAC | SF_FORMAT_PCM_24, 0, 0};
 	SF_INFO sfinfo = {0, iSampleRate, 1, SF_ENDIAN_CPU | SF_FORMAT_AU | SF_FORMAT_FLOAT, 0, 0};
 	Q_ASSERT(sf_format_check(&sfinfo));
@@ -91,8 +93,7 @@ void VoiceRecorder::run() {
 
 			RecordInfo *ri = qhRecordInfo.value(index);
 			if (!ri->sf) {
-                                QString fileName = sFileName.arg(index);
-				ri->sf = sf_open(qPrintable(fileName), SFM_WRITE, &sfinfo);
+				ri->sf = sf_open(qPrintable(qsFileName.arg(index)), SFM_WRITE, &sfinfo);
 				//sf_command(ri->sf, SFC_SET_UPDATE_HEADER_AUTO, NULL, SF_TRUE);
 				if (rb->cuUser)
 					sf_set_string(ri->sf, SF_STR_TITLE, qPrintable(rb->cuUser->qsName));
@@ -120,6 +121,7 @@ void VoiceRecorder::run() {
 
 		qmSleepLock.unlock();
 	}
+	qWarning() << "VoiceRecorder: recording stopped";
 }
 
 void VoiceRecorder::stop() {
@@ -127,7 +129,7 @@ void VoiceRecorder::stop() {
 	qwcSleep.wakeAll();
 }
 
-void VoiceRecorder::addBuffer(ClientUser *cu, boost::shared_array<float> buffer, int samples) {
+void VoiceRecorder::addBuffer(const ClientUser *cu, boost::shared_array<float> buffer, int samples) {
 	Q_ASSERT(!bMixDown || cu == NULL);
 
 	{
@@ -153,10 +155,10 @@ void VoiceRecorder::setSampleRate(int sampleRate) {
 }
 
 void VoiceRecorder::setFileName(QString fn) {
-        Q_ASSERT(!bRecording);
-        Q_ASSERT(fn.indexOf("%1")!=-1);
+	Q_ASSERT(!bRecording);
+	Q_ASSERT(fn.indexOf("%1")!=-1);
 
-        sFileName = fn;
+	qsFileName = fn;
 }
 
 void VoiceRecorder::setMixDown(bool mixDown) {

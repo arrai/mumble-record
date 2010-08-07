@@ -38,11 +38,11 @@ class VoiceRecorder : public QThread {
 private:
 	class RecordBuffer {
 	public:
-		ClientUser *cuUser;
+		const ClientUser *cuUser;
 		boost::shared_array<float> fBuffer;
 		int iSamples;
 
-		RecordBuffer(ClientUser *cu, boost::shared_array<float> buffer, int samples) : cuUser(cu), fBuffer(buffer), iSamples(samples) {}
+		RecordBuffer(const ClientUser *cu, boost::shared_array<float> buffer, int samples) : cuUser(cu), fBuffer(buffer), iSamples(samples) {}
 	};
 
 	class RecordInfo {
@@ -62,7 +62,7 @@ private:
 
 	int iSampleRate;
 	bool bRecording;
-        QString sFileName;
+	QString qsFileName;
 	bool bMixDown;
 	quint64 uiRecordedSamples;
 	void clearLists();
@@ -73,7 +73,7 @@ public:
 
 	void run();
 	void stop();
-	void addBuffer(ClientUser *cu, boost::shared_array<float> buffer, int samples);
+	void addBuffer(const ClientUser *cu, boost::shared_array<float> buffer, int samples);
 	void addSilence(int samples);
 	void setSampleRate(int sampleRate);
         void setFileName(QString fn);
