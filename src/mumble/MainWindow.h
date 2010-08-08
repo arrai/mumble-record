@@ -54,6 +54,7 @@ struct ShortcutTarget;
 #include "Usage.h"
 #include "ui_MainWindow.h"
 #include "CustomElements.h"
+#include "VoiceRecordingDialog.h"
 
 class MessageBoxEvent : public QEvent {
 	public:
@@ -90,6 +91,8 @@ class MainWindow : public QMainWindow, public MessageHandler, public Ui::MainWin
 		BanEditor *banEdit;
 		UserEdit *userEdit;
 		Tokens *tokenEdit;
+
+		VoiceRecordingDialog *voiceRecorderDialog;
 
 		MumbleProto::Reject_RejectType rtLast;
 		QString qsDesiredChannel;
@@ -181,6 +184,7 @@ class MainWindow : public QMainWindow, public MessageHandler, public Ui::MainWin
 		void on_qaAudioReset_triggered();
 		void on_qaAudioMute_triggered();
 		void on_qaAudioDeaf_triggered();
+		void on_qaRecording_triggered();
 		void on_qaAudioTTS_triggered();
 		void on_qaAudioUnlink_triggered();
 		void on_qaAudioStats_triggered();

@@ -155,6 +155,8 @@ MainWindow::MainWindow(QWidget *p) : QMainWindow(p) {
 	userEdit = NULL;
 	tokenEdit = NULL;
 
+	voiceRecorderDialog = NULL;
+
 	uiContextSession = ~0;
 	iContextChannel = -1;
 
@@ -1717,6 +1719,18 @@ void MainWindow::on_qaAudioDeaf_triggered() {
 	}
 
 	updateTrayIcon();
+}
+
+void MainWindow::on_qaRecording_triggered() {
+	if(voiceRecorderDialog) {
+		voiceRecorderDialog->reject();
+		delete voiceRecorderDialog;
+		voiceRecorderDialog = NULL;
+
+	}
+
+	voiceRecorderDialog = new VoiceRecordingDialog(this);
+	voiceRecorderDialog->show();
 }
 
 void MainWindow::on_qaAudioTTS_triggered() {
