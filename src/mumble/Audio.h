@@ -129,7 +129,6 @@ class RecordUser : public LoopUser {
 	public:
 		RecordUser();
 		virtual void addFrame(const QByteArray &packet);
-		void fetchFrames();
 };
 
 namespace Audio {
