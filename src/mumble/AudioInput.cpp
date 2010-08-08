@@ -886,8 +886,11 @@ void AudioInput::flushCheck(const QByteArray &frame, bool terminator) {
 		pds << g.p->fPosition[2];
 	}
 
-	if (g.sh && g.sh->recorder) {
-		g.sh->recorder->recordUser->addFrame(QByteArray(data, pds.size() + 1));
+	if (g.sh) {
+		VoiceRecorderPtr recorder(g.sh->recorder);
+		if (recorder) {
+			recorder->recordUser->addFrame(QByteArray(data, pds.size() + 1));
+		}
 	}
 
 	if (g.s.lmLoopMode == Settings::Local)
