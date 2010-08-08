@@ -299,6 +299,12 @@ Settings::Settings() {
 	// Accessibility
 	bHighContrast = false;
 
+	// Recording
+	qsRecordingPath = QDir::homePath();
+	qsRecordingFile = QLatin1String("MumbleRecording-%1");
+	rmRecordingMode = RecordingMixdown;
+	iRecordingFormat = 0;
+
 #if defined(AUDIO_TEST)
 	lmLoopMode = Server;
 #else
@@ -371,6 +377,7 @@ BOOST_TYPEOF_REGISTER_TYPE(Settings::ChannelDrag)
 BOOST_TYPEOF_REGISTER_TYPE(Settings::ServerShow)
 BOOST_TYPEOF_REGISTER_TYPE(Settings::WindowLayout)
 BOOST_TYPEOF_REGISTER_TYPE(Settings::AlwaysOnTopBehaviour)
+BOOST_TYPEOF_REGISTER_TYPE(Settings::RecordingMode)
 BOOST_TYPEOF_REGISTER_TYPE(QString)
 BOOST_TYPEOF_REGISTER_TYPE(QByteArray)
 BOOST_TYPEOF_REGISTER_TYPE(QColor)
@@ -561,6 +568,13 @@ void Settings::load() {
 	SAVELOAD(qbaConnectDialogHeader, "ui/connect/header");
 	SAVELOAD(bHighContrast, "ui/HighContrast");
 
+	// Recording
+	SAVELOAD(qsRecordingPath, "recording/path");
+	SAVELOAD(qsRecordingFile, "recording/file");
+	LOADENUM(rmRecordingMode, "recording/mode");
+	SAVELOAD(iRecordingFormat, "recording/format");
+
+	// LCD
 	SAVELOAD(iLCDUserViewMinColWidth, "lcd/userview/mincolwidth");
 	SAVELOAD(iLCDUserViewSplitterWidth, "lcd/userview/splitterwidth");
 
@@ -800,6 +814,13 @@ void Settings::save() {
 	SAVELOAD(qbaConnectDialogHeader, "ui/connect/header");
 	SAVELOAD(bHighContrast, "ui/HighContrast");
 
+	// Recording
+	SAVELOAD(qsRecordingPath, "recording/path");
+	SAVELOAD(qsRecordingFile, "recording/file");
+	SAVELOAD(rmRecordingMode, "recording/mode");
+	SAVELOAD(iRecordingFormat, "recording/format");
+
+	// LCD
 	SAVELOAD(iLCDUserViewMinColWidth, "lcd/userview/mincolwidth");
 	SAVELOAD(iLCDUserViewSplitterWidth, "lcd/userview/splitterwidth");
 
