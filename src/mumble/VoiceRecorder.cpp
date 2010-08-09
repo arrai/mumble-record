@@ -230,7 +230,7 @@ VoiceRecorderFormat::Format VoiceRecorder::getFormat() const {
 QString VoiceRecorder::getFormatDescription(VoiceRecorderFormat::Format fm) {
 	switch (fm) {
 		case VoiceRecorderFormat::WAV:
-			return tr(".wav - Uncrompressed");
+			return tr(".wav - Uncompressed");
 		case VoiceRecorderFormat::VORBIS:
 			return tr(".ogg (Vorbis) - Compressed");
 		case VoiceRecorderFormat::AU:
