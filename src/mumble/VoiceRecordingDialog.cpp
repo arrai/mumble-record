@@ -4,9 +4,7 @@
 #include "VoiceRecorder.h"
 #include "ServerHandler.h"
 
-VoiceRecordingDialog::VoiceRecordingDialog(QWidget *parent) : QDialog(parent)
-{
-	qtTimer = new QTimer(this);
+VoiceRecordingDialog::VoiceRecordingDialog(QWidget *p = NULL) : QDialog(p), qtTimer(new QTimer(this)) {
 	qtTimer->setObjectName(QLatin1String("qtTimer"));
 	qtTimer->setInterval(200);
 	setupUi(this);
@@ -27,12 +25,11 @@ VoiceRecordingDialog::VoiceRecordingDialog(QWidget *parent) : QDialog(parent)
 	qcbFormat->setCurrentIndex(g.s.iRecordingFormat);
 }
 
-VoiceRecordingDialog::~VoiceRecordingDialog()
-{
+VoiceRecordingDialog::~VoiceRecordingDialog() {
 	reset();
 }
 
-void VoiceRecordingDialog::closeEvent(QCloseEvent *event) {
+void VoiceRecordingDialog::closeEvent(QCloseEvent *evt) {
 	if (g.sh) {
 		VoiceRecorderPtr recorder(g.sh->recorder);
 		if (recorder && recorder->isRunning()) {
@@ -43,7 +40,7 @@ void VoiceRecordingDialog::closeEvent(QCloseEvent *event) {
 								 QMessageBox::No);
 
 			if (ret == QMessageBox::No) {
-				event->ignore();
+				evt->ignore();
 				return;
 			}
 		}
@@ -60,7 +57,7 @@ void VoiceRecordingDialog::closeEvent(QCloseEvent *event) {
 	g.s.iRecordingFormat = (i == -1) ? 0 : i;
 
 	reset();
-	event->accept();
+	evt->accept();
 }
 
 void VoiceRecordingDialog::on_qpbStart_clicked() {
@@ -110,7 +107,7 @@ void VoiceRecordingDialog::on_qpbStart_clicked() {
 		if(!dir.mkpath(dir.absolutePath())) {
 			QMessageBox::critical(this,
 								  tr("Unable to start recording"),
-								  tr("Target directory '%1' could not be created. Please check that this path is valid an accessible to Mumble.").arg(dir.absolutePath()));
+								  tr("Target directory '%1' could not be created. Please check that this path is valid and accessible to Mumble.").arg(dir.absolutePath()));
 			return;
 		}
 	}
