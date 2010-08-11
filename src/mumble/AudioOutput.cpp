@@ -1011,6 +1011,7 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 		boost::shared_array<float> recbuff;
 		if (recorder) {
 			recbuff = boost::shared_array<float>(new float[nsamp]);
+			memset(recbuff.get(), 0, sizeof(float) * nsamp);
 		}
 
 		for (unsigned int i=0;i<iChannels;++i)
