@@ -1101,7 +1101,7 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 
 				if (aos) {
 					for (unsigned int i = 0; i < nsamp; ++i) {
-						recbuff[i] = pfBuffer[i] * volumeAdjustment;
+						recbuff[i] += pfBuffer[i] * volumeAdjustment;
 					}
 
 					if (!recorder->getMixDown()) {
