@@ -148,6 +148,9 @@ void VoiceRecorder::run() {
 					sf_write_float(ri->sf, buffer.get(), rest);
 			}
 
+			for (int i = 0; i < rb->iSamples; i++)
+				rb->fBuffer[i] = rb->fBuffer[i] < -1.0f ? -1.0f : (rb->fBuffer[i] > 1.0f ? 1.0f : rb->fBuffer[i]);
+
 			sf_write_float(ri->sf, rb->fBuffer.get(), rb->iSamples);
 			uiRecordedSamples += rb->iSamples;
 			ri->uiLastPosition = uiRecordedSamples;
