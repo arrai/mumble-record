@@ -90,6 +90,7 @@ void VoiceRecorder::run() {
 			sfinfo.sections = 0;
 			sfinfo.seekable = 0;
 			qWarning() << "VoiceRecorder: recording started to" << qsFileName << "@" << iSampleRate << "hz in OGG/Vorbis format";
+			break;
 		case VoiceRecorderFormat::AU:
 			sfinfo.frames = 0;
 			sfinfo.samplerate = iSampleRate;
