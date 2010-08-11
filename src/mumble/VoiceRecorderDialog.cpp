@@ -1,10 +1,10 @@
-#include "VoiceRecordingDialog.h"
+#include "VoiceRecorderDialog.h"
 #include "AudioOutput.h"
 #include "Global.h"
 #include "VoiceRecorder.h"
 #include "ServerHandler.h"
 
-VoiceRecordingDialog::VoiceRecordingDialog(QWidget *p = NULL) : QDialog(p), qtTimer(new QTimer(this)) {
+VoiceRecorderDialog::VoiceRecorderDialog(QWidget *p = NULL) : QDialog(p), qtTimer(new QTimer(this)) {
 	qtTimer->setObjectName(QLatin1String("qtTimer"));
 	qtTimer->setInterval(200);
 	setupUi(this);
@@ -25,11 +25,11 @@ VoiceRecordingDialog::VoiceRecordingDialog(QWidget *p = NULL) : QDialog(p), qtTi
 	qcbFormat->setCurrentIndex(g.s.iRecordingFormat);
 }
 
-VoiceRecordingDialog::~VoiceRecordingDialog() {
+VoiceRecorderDialog::~VoiceRecorderDialog() {
 	reset();
 }
 
-void VoiceRecordingDialog::closeEvent(QCloseEvent *evt) {
+void VoiceRecorderDialog::closeEvent(QCloseEvent *evt) {
 	if (g.sh) {
 		VoiceRecorderPtr recorder(g.sh->recorder);
 		if (recorder && recorder->isRunning()) {
@@ -60,7 +60,7 @@ void VoiceRecordingDialog::closeEvent(QCloseEvent *evt) {
 	evt->accept();
 }
 
-void VoiceRecordingDialog::on_qpbStart_clicked() {
+void VoiceRecorderDialog::on_qpbStart_clicked() {
 	if (!g.sh) {
 		QMessageBox::critical(this,
 							  tr("Unable to start recording"),
@@ -149,7 +149,7 @@ void VoiceRecordingDialog::on_qpbStart_clicked() {
 	qgbOutput->setDisabled(true);
 }
 
-void VoiceRecordingDialog::on_qpbStop_clicked() {
+void VoiceRecorderDialog::on_qpbStop_clicked() {
 	if (!g.sh) {
 		reset();
 		return;
@@ -173,7 +173,7 @@ void VoiceRecordingDialog::on_qpbStop_clicked() {
 	qgbOutput->setEnabled(true);
 }
 
-void VoiceRecordingDialog::on_qtTimer_timeout() {
+void VoiceRecorderDialog::on_qtTimer_timeout() {
 	if (!g.sh) {
 		reset();
 		return;
@@ -193,7 +193,7 @@ void VoiceRecordingDialog::on_qtTimer_timeout() {
 	qlTime->setText(n.toString(QLatin1String("hh:mm:ss")));
 }
 
-void VoiceRecordingDialog::on_qtbTargetDirectoryBrowse_triggered(QAction*) {
+void VoiceRecorderDialog::on_qtbTargetDirectoryBrowse_triggered(QAction*) {
 	QString dir = QFileDialog::getExistingDirectory(this,
 													tr("Select target directory"),
 													QString(),
@@ -202,7 +202,7 @@ void VoiceRecordingDialog::on_qtbTargetDirectoryBrowse_triggered(QAction*) {
 		qleTargetDirectory->setText(dir);
 }
 
-void VoiceRecordingDialog::reset() {
+void VoiceRecorderDialog::reset() {
 	qtTimer->stop();
 
 	if (g.sh) {

@@ -1017,6 +1017,11 @@ void MainWindow::on_qaServerTokens_triggered() {
 	tokenEdit->show();
 }
 
+void MainWindow::voiceRecorderDialog_finished(int) {
+	delete voiceRecorderDialog;
+	voiceRecorderDialog = NULL;
+}
+
 void MainWindow::qmUser_aboutToShow() {
 	ClientUser *p = getContextMenuUser();
 
@@ -1723,14 +1728,14 @@ void MainWindow::on_qaAudioDeaf_triggered() {
 
 void MainWindow::on_qaRecording_triggered() {
 	if(voiceRecorderDialog) {
-		voiceRecorderDialog->reject();
-		delete voiceRecorderDialog;
-		voiceRecorderDialog = NULL;
-
+		voiceRecorderDialog->show();
+		voiceRecorderDialog->raise();
 	}
-
-	voiceRecorderDialog = new VoiceRecordingDialog(this);
-	voiceRecorderDialog->show();
+	else {
+		voiceRecorderDialog = new VoiceRecorderDialog(this);
+		connect(voiceRecorderDialog, SIGNAL(finished(int)), this, SLOT(voiceRecorderDialog_finished(int)));
+		voiceRecorderDialog->show();
+	}
 }
 
 void MainWindow::on_qaAudioTTS_triggered() {

@@ -54,7 +54,7 @@ struct ShortcutTarget;
 #include "Usage.h"
 #include "ui_MainWindow.h"
 #include "CustomElements.h"
-#include "VoiceRecordingDialog.h"
+#include "VoiceRecorderDialog.h"
 
 class MessageBoxEvent : public QEvent {
 	public:
@@ -92,7 +92,7 @@ class MainWindow : public QMainWindow, public MessageHandler, public Ui::MainWin
 		UserEdit *userEdit;
 		Tokens *tokenEdit;
 
-		VoiceRecordingDialog *voiceRecorderDialog;
+		VoiceRecorderDialog *voiceRecorderDialog;
 
 		MumbleProto::Reject_RejectType rtLast;
 		QString qsDesiredChannel;
@@ -216,6 +216,7 @@ class MainWindow : public QMainWindow, public MessageHandler, public Ui::MainWin
 		void on_gsWhisper_triggered(bool, QVariant);
 		void on_Reconnect_timeout();
 		void on_Icon_activated(QSystemTrayIcon::ActivationReason);
+		void voiceRecorderDialog_finished(int);
 		void qtvUserCurrentChanged(const QModelIndex &, const QModelIndex &);
 		void serverConnected();
 		void serverDisconnected(QAbstractSocket::SocketError, QString reason);
