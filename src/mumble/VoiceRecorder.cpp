@@ -32,7 +32,9 @@
 #include "VoiceRecorder.h"
 
 #include "Audio.h"
+#include "AudioOutput.h"
 #include "ClientUser.h"
+#include "Global.h"
 
 VoiceRecorder::RecordBuffer::RecordBuffer(const ClientUser *cu,
 	boost::shared_array<float> buffer, int samples) :
@@ -56,6 +58,10 @@ VoiceRecorder::VoiceRecorder(QObject *p) : QThread(p), recordUser(new RecordUser
 VoiceRecorder::~VoiceRecorder() {
 	stop();
 	wait();
+
+	AudioOutputPtr ao = g.ao;
+	if (ao)
+		ao->removeBuffer(recordUser.get());
 }
 
 void VoiceRecorder::run() {
