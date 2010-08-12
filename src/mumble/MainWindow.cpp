@@ -1728,8 +1728,9 @@ void MainWindow::on_qaAudioDeaf_triggered() {
 
 void MainWindow::on_qaRecording_triggered() {
 	if (voiceRecorderDialog) {
-		voiceRecorderDialog->raise();
 		voiceRecorderDialog->show();
+		voiceRecorderDialog->raise();
+		voiceRecorderDialog->activateWindow();
 	} else {
 		voiceRecorderDialog = new VoiceRecorderDialog(this);
 		connect(voiceRecorderDialog, SIGNAL(finished(int)), this, SLOT(voiceRecorderDialog_finished(int)));
