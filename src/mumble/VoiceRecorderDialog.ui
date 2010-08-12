@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>219</height>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <iconset resource="mumble_tango.qrc">
     <normaloff>:/actions/media-record.svg</normaloff>:/actions/media-record.svg</iconset>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" columnstretch="5,0">
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0" colspan="2">
     <widget class="QGroupBox" name="qgbControl">
      <property name="title">
@@ -67,7 +67,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Start</string>
+         <string>&amp;Start</string>
         </property>
        </widget>
       </item>
@@ -83,7 +83,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Stop</string>
+         <string>S&amp;top</string>
         </property>
        </widget>
       </item>
@@ -172,8 +172,20 @@
         </item>
         <item>
          <widget class="QToolButton" name="qtbTargetDirectoryBrowse">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>73</width>
+            <height>21</height>
+           </size>
+          </property>
           <property name="text">
-           <string>...</string>
+           <string>&amp;Browse...</string>
           </property>
          </widget>
         </item>
