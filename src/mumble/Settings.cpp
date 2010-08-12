@@ -300,7 +300,7 @@ Settings::Settings() {
 	bHighContrast = false;
 
 	// Recording
-	qsRecordingPath = QDir::homePath();
+	qsRecordingPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
 	qsRecordingFile = QLatin1String("MumbleRecording-%1");
 	rmRecordingMode = RecordingMixdown;
 	iRecordingFormat = 0;
