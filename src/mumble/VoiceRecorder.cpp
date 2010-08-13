@@ -117,10 +117,11 @@ void VoiceRecorder::run() {
 			break;
 		}
 
-		while (!qhRecordBuffer.isEmpty()) {
+		forever {
 			boost::shared_ptr<RecordBuffer> rb;
 			{
 				QMutexLocker l(&qmBufferLock);
+				if (qhRecordBuffer.isEmpty()) break;
 				rb = qhRecordBuffer.takeFirst();
 			}
 
