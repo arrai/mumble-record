@@ -254,7 +254,7 @@ int CELTCodec080::decode_float(CELTDecoder *st, const unsigned char *data, int l
 	return celt_decode_float(st, data, len, pcm, SAMPLE_RATE / 100);
 }
 
-LoopUser::LoopUser() : ClientUser() {
+LoopUser::LoopUser() {
 	qsName = QLatin1String("Loopy");
 	uiSession = 0;
 	iId = 0;
