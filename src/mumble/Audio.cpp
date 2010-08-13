@@ -347,7 +347,7 @@ RecordUser::~RecordUser() {
 
 void RecordUser::addFrame(const QByteArray &packet) {
 	AudioOutputPtr ao(g.ao);
-	if (ao)
+	if (!ao)
 		return;
 
 	int iSeq;
