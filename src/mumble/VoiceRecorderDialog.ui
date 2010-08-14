@@ -170,11 +170,12 @@
         <item>
          <widget class="QLineEdit" name="qleTargetDirectory">
           <property name="toolTip">
-           <string>&lt;pre&gt;Valid variables are:
-%name	Inserts the users name
+           <string>&lt;pre&gt;
+Valid variables are:
+%user	Inserts the users name
 %date	Inserts the current date
 %time	Inserts the current time
-%hostname	Inserts the hostname
+%host	Inserts the hostname
 &lt;/pre&gt;</string>
           </property>
          </widget>
@@ -189,20 +190,17 @@
        </layout>
       </item>
       <item row="4" column="1">
-       <layout class="QHBoxLayout" name="qhblFilename">
-        <item>
-         <widget class="QLineEdit" name="qleFilename">
-          <property name="toolTip">
-           <string>&lt;pre&gt;Valid variables are:
-%name	Inserts the users name
+       <widget class="QLineEdit" name="qleFilename">
+        <property name="toolTip">
+         <string>&lt;pre&gt;
+Valid variables are:
+%user	Inserts the users name
 %date	Inserts the current date
 %time	Inserts the current time
-%hostname	Inserts the hostname
+%host	Inserts the hostname
 &lt;/pre&gt;</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

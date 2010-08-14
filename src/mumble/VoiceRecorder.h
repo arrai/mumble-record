@@ -90,9 +90,10 @@ class VoiceRecorder : public QThread {
 	QString qsFileName;
 	bool bMixDown;
 	VoiceRecorderFormat::Format fmFormat;
+	const QDateTime qdtRecordingStart;
 
-	QString sanatizeFilenameOrPathComponent(const QString str);
-	QString expandTemplateVars(const QString path, boost::shared_ptr<RecordBuffer> rb);
+	QString sanitizeFilenameOrPathComponent(const QString &str) const;
+	QString expandTemplateVariables(const QString &path, boost::shared_ptr<RecordBuffer> rb) const;
 
   public:
 	explicit VoiceRecorder(QObject *p);

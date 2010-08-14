@@ -55,7 +55,7 @@ VoiceRecorder::RecordInfo::~RecordInfo() {
 
 VoiceRecorder::VoiceRecorder(QObject *p) : QThread(p), recordUser(new RecordUser()),
 	tTimestamp(new Timer()), iSampleRate(0), bRecording(false), bMixDown(false),
-	fmFormat(VoiceRecorderFormat::WAV) {
+	fmFormat(VoiceRecorderFormat::WAV), qdtRecordingStart(QDateTime::currentDateTime()) {
 }
 
 VoiceRecorder::~VoiceRecorder() {
@@ -63,19 +63,18 @@ VoiceRecorder::~VoiceRecorder() {
 	wait();
 }
 
-QString VoiceRecorder::sanatizeFilenameOrPathComponent(const QString str) {
+QString VoiceRecorder::sanitizeFilenameOrPathComponent(const QString &str) const {
 	// Trim leading/trailing whitespaces
 	QString res = str.trimmed();
 	if (res.isEmpty())
 		return QLatin1String("_");
 
 #ifdef Q_OS_WIN
-	//
 	// Rules according to http://en.wikipedia.org/wiki/Filename#Comparison_of_file_name_limitations
 	// and http://msdn.microsoft.com/en-us/library/aa365247(VS.85).aspx
 
-	// Make sure name doesn't end in .
-	if (res.at(res.size()-1) == QLatin1Char('.'))
+	// Make sure name doesn't end in "."
+	if (res.at(res.size() - 1) == QLatin1Char('.'))
 		res = res.append(QLatin1Char('_'));
 
 	// Replace < > : " / \ | ? * as well as chr(0) to chr(31)
@@ -88,7 +87,7 @@ QString VoiceRecorder::sanatizeFilenameOrPathComponent(const QString str) {
 	if (res.length() > 255) {
 		res.truncate(255);
 		// Call ourselves recursively to make sure we do not end up violating any of our rules because of this
-		res = sanatizeFilenameOrPathComponent(res);
+		res = sanitizeFilenameOrPathComponent(res);
 	}
 #else
 	// For the rest just make sure the string doesn't contain a \0 or any forward-slashes
@@ -97,46 +96,47 @@ QString VoiceRecorder::sanatizeFilenameOrPathComponent(const QString str) {
 	return res;
 }
 
-QString VoiceRecorder::expandTemplateVars(QString path, boost::shared_ptr<RecordBuffer> rb) {
+QString VoiceRecorder::expandTemplateVariables(const QString &path, boost::shared_ptr<RecordBuffer> rb) const {
 	// Split path into components
 	QString res;
 	QStringList comp = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
 	Q_ASSERT(!comp.isEmpty());
 
+	QString username(QLatin1String("Mixdown"));
+	if (rb->cuUser)
+		username = rb->cuUser->qsName;
+
+	QString date(qdtRecordingStart.date().toString(Qt::ISODate));
+	QString time(qdtRecordingStart.time().toString(QLatin1String("hh-mm-ss")));
+
+	QString hostname(QLatin1String("Unknown"));
+	if (g.sh && g.uiSession != 0) {
+		unsigned short port;
+		QString uname, pw;
+		g.sh->getConnectionInfo(hostname, port, uname, pw);
+	}
+
+	QHash<const QString, QString> vars;
+	vars.insert(QLatin1String("user"), username);
+	vars.insert(QLatin1String("date"), date);
+	vars.insert(QLatin1String("time"), time);
+	vars.insert(QLatin1String("host"), hostname);
+
 	// Reassemble and expand
 	bool first = true;
 	foreach (QString str, comp) {
-		QString username(QLatin1String("Mixdown"));
-		if (rb->cuUser)
-			username = rb->cuUser->qsName;
-
-		QString date(QDate::currentDate().toString(Qt::ISODate));
-		QString time(QTime::currentTime().toString(QLatin1String("hh-mm-ss")));
-
-		QString hostname(QLatin1String("Unknown"));
-		if (g.sh && g.uiSession != 0) {
-			unsigned short port;
-			QString uname, pw;
-			g.sh->getConnectionInfo(hostname, port, uname, pw);
-		}
 
 		/*
 		Valid variables are:
-			%name		Inserts the users name
+			%user		Inserts the users name
 			%date		Inserts the current date
 			%time		Inserts the current time
-			%hostname	Inserts the hostname
+			%host		Inserts the hostname
 		*/
 
 		bool replacements = false;
 		{
 			QString tmp;
-
-			QHash<const QString, QString> vars;
-			vars.insert(QLatin1String("%name"), username);
-			vars.insert(QLatin1String("%date"), date);
-			vars.insert(QLatin1String("%time"), time);
-			vars.insert(QLatin1String("%hostname"), hostname);
 
 			tmp.reserve(str.length() * 2);
 			for (int i = 0; i < str.size(); ++i) {
@@ -145,9 +145,9 @@ QString VoiceRecorder::expandTemplateVars(QString path, boost::shared_ptr<Record
 					QHashIterator<const QString, QString> it(vars);
 					while (it.hasNext()) {
 						it.next();
-						if (str.midRef(i, it.key().length()) == it.key()) {
-							i+= it.key().length() - 1;
-							tmp+=it.value();
+						if (str.midRef(i + 1, it.key().length()) == it.key()) {
+							i += it.key().length();
+							tmp += it.value();
 							replaced = true;
 							replacements = true;
 							break;
@@ -156,20 +156,19 @@ QString VoiceRecorder::expandTemplateVars(QString path, boost::shared_ptr<Record
 				}
 
 				if (!replaced)
-					tmp+=str[i];
+					tmp += str[i];
 			}
 
 			str = tmp;
 		}
 
 		if (replacements)
-			str = sanatizeFilenameOrPathComponent(str);
+			str = sanitizeFilenameOrPathComponent(str);
 
 		if (first) {
 			res.append(str);
 			first = false;
-		}
-		else {
+		} else {
 			res.append(QLatin1Char('/') + str);
 		}
 	}
@@ -247,11 +246,11 @@ void VoiceRecorder::run() {
 
 			boost::shared_ptr<RecordInfo> ri = qhRecordInfo.value(index);
 			if (!ri->sf) {
-				QString filename = expandTemplateVars(qsFileName, rb);
+				QString filename = expandTemplateVariables(qsFileName, rb);
 
 				{
+					int cnt = 1;
 					QString nf(filename);
-					unsigned int cnt = 1;
 					QFileInfo tfi(filename);
 					while (QFile::exists(nf)) {
 						nf = tfi.path() + QLatin1Char('/') + tfi.completeBaseName() + QString(QLatin1String(" (%1).")).arg(cnt) +  tfi.suffix();
@@ -262,7 +261,7 @@ void VoiceRecorder::run() {
 				qWarning() << "Recorder opens file" << filename;
 				QFileInfo fi(filename);
 
-				if(!QDir::home().mkpath(fi.absolutePath())) {
+				if (!QDir().mkpath(fi.absolutePath())) {
 					qWarning() << "Failed to create target directory: " << fi.absolutePath();
 					return;
 				}
@@ -279,7 +278,6 @@ void VoiceRecorder::run() {
 					return;
 				}
 
-				//sf_command(ri->sf, SFC_SET_UPDATE_HEADER_AUTO, NULL, SF_TRUE);
 				if (rb->cuUser)
 					sf_set_string(ri->sf, SF_STR_TITLE, qPrintable(rb->cuUser->qsName));
 			}
