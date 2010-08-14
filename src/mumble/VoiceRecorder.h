@@ -33,6 +33,8 @@
 #ifndef _VOICERECORDER_H
 #define _VOICERECORDER_H
 
+#pragma once
+
 #include "mumble_pch.hpp"
 
 class ClientUser;
@@ -40,13 +42,18 @@ class RecordUser;
 struct Timer;
 
 namespace VoiceRecorderFormat {
-	enum Format {
-		WAV = 0,
-		VORBIS,
-		AU,
-		FLAC,
-		formatEnumEnd
-	};
+
+enum Format {
+	WAV = 0,
+	VORBIS,
+	AU,
+	FLAC,
+	kEnd
+};
+
+QString getFormatDescription(VoiceRecorderFormat::Format fm);
+QString getFormatDefaultExtension(VoiceRecorderFormat::Format fm);
+
 };
 
 class VoiceRecorder : public QThread {
@@ -104,10 +111,6 @@ class VoiceRecorder : public QThread {
 
 	void setFormat(VoiceRecorderFormat::Format fm);
 	VoiceRecorderFormat::Format getFormat() const;
-	static QString getFormatDescription(VoiceRecorderFormat::Format fm);
-	static QString getFormatDefaultExtension(VoiceRecorderFormat::Format fm);
-	static VoiceRecorderFormat::Format getFormatFromId(QString &id);
-	static QString getFormatId(QString &id);
 };
 
 typedef boost::shared_ptr<VoiceRecorder> VoiceRecorderPtr;
