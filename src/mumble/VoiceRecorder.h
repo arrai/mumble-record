@@ -1,5 +1,6 @@
 /* Copyright (C) 2005-2010, Thorvald Natvig <thorvald@natvig.com>
    Copyright (C) 2010, Benjamin Jemlich <pcgod@users.sourceforge.net>
+   Copyright (C) 2010, Stefan Hacker <dd0t@users.sourceforge.net>
 
    All rights reserved.
 
@@ -81,6 +82,8 @@ private:
 	quint64 uiRecordedSamples;
 	VoiceRecorderFormat::Format fmFormat;
 
+	QString sanatizeFilenameOrPathComponent(const QString str);
+	QString expandTemplateVars(const QString path, boost::shared_ptr<RecordBuffer> rb);
 public:
 	explicit VoiceRecorder(QObject *p);
 	~VoiceRecorder();
