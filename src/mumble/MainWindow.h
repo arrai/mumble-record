@@ -47,6 +47,7 @@ class UserModel;
 class Tokens;
 class Channel;
 class UserInformation;
+class VoiceRecorderDialog;
 
 struct ShortcutTarget;
 
@@ -54,7 +55,6 @@ struct ShortcutTarget;
 #include "Usage.h"
 #include "ui_MainWindow.h"
 #include "CustomElements.h"
-#include "VoiceRecorderDialog.h"
 
 class MessageBoxEvent : public QEvent {
 	public:

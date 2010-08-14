@@ -57,6 +57,7 @@
 #include "NetworkConfig.h"
 #include "ACL.h"
 #include "UserInformation.h"
+#include "VoiceRecorderDialog.h"
 
 #ifdef Q_OS_WIN
 #include "TaskList.h"
