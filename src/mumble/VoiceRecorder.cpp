@@ -233,11 +233,11 @@ void VoiceRecorder::run() {
 			break;
 		}
 
-		while (!qhRecordBuffer.isEmpty()) {
+		while (!qlRecordBuffer.isEmpty()) {
 			boost::shared_ptr<RecordBuffer> rb;
 			{
 				QMutexLocker l(&qmBufferLock);
-				rb = qhRecordBuffer.takeFirst();
+				rb = qlRecordBuffer.takeFirst();
 			}
 
 			int index = bMixDown ? 0 : rb->cuUser->uiSession;
@@ -319,7 +319,7 @@ void VoiceRecorder::addBuffer(const ClientUser *cu, boost::shared_array<float> b
 	{
 		QMutexLocker l(&qmBufferLock);
 		boost::shared_ptr<RecordBuffer> rb(new RecordBuffer(cu, buffer, samples));
-		qhRecordBuffer << rb;
+		qlRecordBuffer << rb;
 	}
 	int index = bMixDown ? 0 : cu->uiSession;
 	if (!qhRecordInfo.contains(index)) {

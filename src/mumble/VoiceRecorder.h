@@ -67,7 +67,7 @@ private:
 	};
 
 	QHash< int, boost::shared_ptr<RecordInfo> > qhRecordInfo;
-	QList< boost::shared_ptr<RecordBuffer> > qhRecordBuffer;
+	QList< boost::shared_ptr<RecordBuffer> > qlRecordBuffer;
 
 	boost::scoped_ptr<RecordUser> recordUser;
 
