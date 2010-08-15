@@ -274,17 +274,20 @@ void MainWindow::msgUserState(const MumbleProto::UserState &msg) {
 	if (msg.has_recording()) {
 		pDst->setRecording(msg.recording());
 
-		if (pDst == pSelf) {
-			if (pDst->bRecording)
-				g.l->log(Log::Recording, tr("Recording started"));
-			else
-				g.l->log(Log::Recording, tr("Recording stopped"));
-		}
-		else if (pDst->cChannel == pSelf->cChannel) {
-			if(pDst->bRecording)
-				g.l->log(Log::Recording, tr("%1 started recording.").arg(Log::formatClientUser(pDst, Log::Source)));
-			else
-				g.l->log(Log::Recording, tr("%1 stopped recording.").arg(Log::formatClientUser(pDst, Log::Source)));
+		// Do nothing during initial sync
+		if (pSelf) {
+			if (pDst == pSelf) {
+				if (pDst->bRecording)
+					g.l->log(Log::Recording, tr("Recording started"));
+				else
+					g.l->log(Log::Recording, tr("Recording stopped"));
+			}
+			else if (pDst->cChannel == pSelf->cChannel) {
+				if(pDst->bRecording)
+					g.l->log(Log::Recording, tr("%1 started recording.").arg(Log::formatClientUser(pDst, Log::Source)));
+				else
+					g.l->log(Log::Recording, tr("%1 stopped recording.").arg(Log::formatClientUser(pDst, Log::Source)));
+			}
 		}
 	}
 
