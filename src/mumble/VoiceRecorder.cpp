@@ -280,20 +280,17 @@ void VoiceRecorder::run() {
 					sf_set_string(ri->sf, SF_STR_TITLE, qPrintable(rb->cuUser->qsName));
 			}
 
-			if (rb->uiTimestamp - ri->uiLastPosition >= rb->iSamples / (iSampleRate / 100) * 10000) {
+			qint64 missingSamples = ((rb->uiTimestamp - ri->uiLastPosition) * iSampleRate) / 1000000 - rb->iSamples;
+			if (missingSamples > iSampleRate / 10) {
 				// write silence until we reach our current sample value
-				qint64 missingSamples = ((rb->uiTimestamp - ri->uiLastPosition) * iSampleRate) / 1000000 - (rb->iSamples * 10);
-				if (missingSamples >= 0) {
-					boost::scoped_array<float> buffer(new float[1024]);
-					memset(buffer.get(), 0, sizeof(float) * 1024);
-					int rest = missingSamples % 1024;
-					quint64 steps = missingSamples / 1024;
-					for (quint64 i = 0; i < steps; ++i) {
-						sf_write_float(ri->sf, buffer.get(), 1024);
-					}
-					if (rest > 0)
-						sf_write_float(ri->sf, buffer.get(), rest);
-				}
+				boost::scoped_array<float> buffer(new float[1024]);
+				memset(buffer.get(), 0, sizeof(float) * 1024);
+				qint64 rest = missingSamples;
+				for (; rest > 1024; rest -= 1024)
+					sf_write_float(ri->sf, buffer.get(), 1024);
+
+				if (rest > 0)
+					sf_write_float(ri->sf, buffer.get(), rest);
 			}
 
 			sf_write_float(ri->sf, rb->fBuffer.get(), rb->iSamples);
