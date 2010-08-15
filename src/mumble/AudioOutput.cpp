@@ -1106,6 +1106,7 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 							Q_ASSERT(false);
 						}
 						recbuff = boost::shared_array<float>(new float[nsamp]);
+						memset(recbuff.get(), 0, sizeof(float) * nsamp);
 					}
 
 					// Don't add the local audio to the real output
